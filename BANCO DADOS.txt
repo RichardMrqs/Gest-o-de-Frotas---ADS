@@ -1,0 +1,58 @@
+Título: Arquitetura de Dados e Banco de Dados do "GESTÃO FROTAS"
+1. Introdução: A Necessidade de Persistência de Dados
+O sistema "GESTÃO FROTAS" foi projetado para ser uma plataforma dinâmica e responsiva, capaz de gerenciar múltiplos fluxos de informação—desde a localização geográfica em tempo real dos veículos até o status operacional dos motoristas e os registros financeiros.
+
+Para que um sistema dessa complexidade funcione de maneira confiável, a espinha dorsal é seu banco de dados. A simples utilização de armazenamento local (como o localStorage) é viável apenas para prototipagem. Na arquitetura real do projeto, implementamos uma solução de banco de dados robusta, escalável e de alta performance, desacoplada do front-end.
+
+2. A Escolha da Tecnologia: Banco de Dados NoSQL (MongoDB)
+Para este projeto, optamos por utilizar o MongoDB, um banco de dados NoSQL orientado a documentos, como nossa principal solução de armazenamento.
+
+A escolha pelo MongoDB (em vez de um banco SQL tradicional) foi estratégica e baseou-se em três pilares:
+
+Flexibilidade de Esquema: A natureza da logística é fluida. Um veículo pode precisar de novos sensores, um motorista pode ter novos certificados. O MongoDB nos permite adicionar novos campos aos nossos "documentos" sem a necessidade de migrações complexas de tabelas, tornando o sistema adaptável.
+
+Integração Nativa com JavaScript (JSON): Nosso front-end é construído em HTML, CSS e JavaScript. O MongoDB armazena dados em BSON (um formato binário similar ao JSON). Isso significa que os dados que vêm do nosso banco são lidos de forma nativa pelo nosso script.js, eliminando a "fricção" de traduzir dados de tabelas relacionais para objetos JavaScript.
+
+Performance em Geo-localização: Como o mapa de operações é a funcionalidade central, precisávamos de um banco que fosse excelente em consultas geográficas. O MongoDB possui índices geoespaciais (GeoJSON) nativos, permitindo consultas extremamente rápidas, como "encontrar todos os veículos a 10km de um ponto X".
+
+3. Estrutura do Banco de Dados (As "Collections")
+Nosso banco de dados está estruturado em várias "Collections" (o equivalente NoSQL para "tabelas") que se relacionam entre si:
+
+veiculos: Armazena o cadastro de cada caminhão (placa, modelo, status) e, o mais importante, sua última localização conhecida (coordenadas de latitude e longitude). É esta collection que alimenta o mapa da "Visão Geral".
+
+motoristas: Mantém o registro de todos os condutores (nome, CNH, status, histórico de viagens).
+
+rotas: Gerencia as viagens planejadas e em andamento. Cada documento aqui "liga" um veiculo_id a um motorista_id, além de conter a origem, destino e pontos de parada.
+
+alertas: Funciona como um "log" de eventos importantes, como "manutenção necessária" ou "veículo fora da rota", permitindo auditoria e notificações em tempo real.
+
+financeiro: Registra os custos operacionais (combustível, pedágio) e os lucros associados a cada rota finalizada.
+
+4. O Fluxo de Dados: A Comunicação via API
+Por questões de segurança, o painel de controle (o front-end) nunca se comunica diretamente com o banco de dados. A comunicação é intermediada por uma API RESTful.
+
+O fluxo funciona da seguinte maneira:
+
+Cadastro (Ex: Novo Veículo):
+
+O usuário preenche o formulário na página frota.html e clica em "Adicionar Veículo".
+
+O script.js captura esses dados e envia uma requisição fetch (do tipo POST) para a nossa API (um "servidor" que roda em back-end, por exemplo: api.gestaofrotas.com/veiculos).
+
+Back-end (Servidor):
+
+Nosso servidor (desenvolvido em Node.js) recebe essa requisição.
+
+Ele valida os dados (ex: verifica se a placa já existe).
+
+Se estiver tudo certo, o servidor executa o comando para inserir o novo documento na collection veiculos do MongoDB.
+
+Visualização (Ex: Mapa):
+
+Quando o usuário abre a index.html, o script.js faz uma requisição fetch (do tipo GET) para api.gestaofrotas.com/veiculos.
+
+O servidor consulta o MongoDB, obtém a lista de todos os veículos e suas localizações, e a retorna para o front-end.
+
+O script.js então usa esses dados para renderizar os marcadores no mapa.
+
+Conclusão: Este modelo de arquitetura (Front-end ➔ API ➔ Banco de Dados) garante que nosso sistema seja seguro, escalável e eficiente, permitindo que a plataforma "GESTÃO FROTAS" manipule dados complexos e em tempo real de forma profissional.

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>GESTÃO FROTAS - Dashboard</title>
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <aside class="sidebar">
+    <h2 class="logo">🚛 GESTÃO FROTAS</h2>
+    
+    <nav id="main-nav">
+      <a href="#visao-geral" data-page="page-visao-geral" class="ativo">📍 Visão Geral</a>
+      <a href="#frota" data-page="page-frota">🚚 Frota</a>
+      <a href="#rotas" data-page="page-rotas">🗺️ Rotas</a>
+      <a href="#motoristas" data-page="page-motoristas">👷 Motoristas</a>
+      <a href="#financeiro" data-page="page-financeiro">💰 Financeiro</a>
+      <a href="#alertas" data-page="page-alertas">⚠️ Alertas</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+
+    <div id="page-visao-geral" class="page-content ativo">
+      <header>
+        <h1>📍 Mapa de Operações</h1>
+        <p>Monitoramento em tempo real dos veículos da frota.</p>
+      </header>
+      <div class="visao-geral-container">
+        <section id="mapa-simulacao"></section>
+        <aside id="lista-mapa-veiculos">
+          <h3 class="lista-mapa-titulo">Veículos em Operação</h3>
+          <div id="mapa-lista-scroll"></div>
+        </aside>
+      </div>
+    </div>
+
+    <div id="page-frota" class="page-content">
+      <header>
+        <h1>🚚 Frota</h1>
+        <p>Visualize, cadastre, edite e filtre todos os veículos.</p>
+      </header>
+      <section class="filtro-container">
+        <input type="text" id="filtro-frota-busca" placeholder="Buscar por placa ou modelo..." />
+        <select id="filtro-frota-status">
+          <option value="">Todos os Status</option>
+          <option value="Em rota">Em rota</option>
+          <option value="Parado">Parado</option>
+          <option value="Manutenção">Manutenção</option>
+        </select>
+      </section>
+      <section class="form-container">
+        <h2 id="form-veiculo-titulo">Cadastrar Novo Veículo</h2>
+        <form id="form-novo-veiculo">
+          <input type="hidden" id="veiculo-edit-placa" /> 
+          <div class="form-grid">
+            <input type="text" id="veiculo-placa" placeholder="Placa (ex: ABC-1234)" required />
+            <input type="text" id="veiculo-modelo" placeholder="Modelo (ex: Volvo FH)" required />
+            <select id="veiculo-status" required>
+              <option value="Parado">Parado</option>
+              <option value="Em rota">Em rota</option>
+              <option value="Manutenção">Manutenção</option>
+            </select>
+          </div>
+          <button type="submit" id="form-veiculo-btn-salvar">Adicionar Veículo</button>
+          <button type="button" id="form-veiculo-btn-cancelar" class="btn-cancelar" style="display:none;">Cancelar Edição</button>
+        </form>
+      </section>
+      <section id="lista-veiculos" class="cards"></section>
+    </div>
+
+    <div id="page-rotas" class="page-content">
+      <header>
+        <h1>🗺️ Rotas e Agendamentos</h1>
+        <p>Listagem de viagens e rotas planejadas.</p>
+      </header>
+      <section id="lista-rotas" class="cards"></section>
+    </div>
+
+    <div id="page-motoristas" class="page-content">
+      <header>
+        <h1>👷 Motoristas</h1>
+        <p>Gerencie os condutores da sua frota.</p>
+      </header>
+      <section class="filtro-container">
+        <input type="text" id="filtro-motoristas-busca" placeholder="Buscar por nome ou CNH..." />
+      </section>
+      <section class="form-container">
+        <h2 id="form-motorista-titulo">Cadastrar Novo Motorista</h2>
+        <form id="form-novo-motorista">
+          <input type="hidden" id="motorista-edit-cnh" />
+          <div class="form-grid">
+            <input type="text" id="motorista-nome" placeholder="Nome Completo" required />
+            <input type="text" id="motorista-cnh" placeholder="CNH (somente números)" required />
+            <select id="motorista-status" required>
+              <option value="Ativo">Ativo</option>
+              <option value="Em viagem">Em viagem</option>
+              <option value="Folga">Folga</option>
+            </select>
+          </div>
+          <button type="submit" id="form-motorista-btn-salvar">Adicionar Motorista</button>
+          <button type="button" id="form-motorista-btn-cancelar" class="btn-cancelar" style="display:none;">Cancelar Edição</button>
+        </form>
+      </section>
+      <section id="lista-motoristas" class="cards"></section>
+    </div>
+
+    <div id="page-financeiro" class="page-content">
+      <header>
+        <h1>💰 Financeiro</h1>
+        <p>Resumo de ganhos e custos operacionais simulados.</p>
+      </header>
+      <section class="chart-container">
+        <canvas id="grafico-financeiro"></canvas>
+      </section>
+      <section id="resumo-financeiro" class="cards"></section>
+    </div>
+
+    <div id="page-alertas" class="page-content">
+      <header>
+        <h1>⚠️ Alertas</h1>
+        <p>Notificações automáticas sobre manutenção, rota e status dos veículos.</p>
+      </header>
+      <section id="lista-alertas" class="cards"></section>
+    </div>
+
+  </main>
+
+  <script src="script.js"></script>
+  
+  <div id="notificacao-container"></div>
+</body>
+</html>

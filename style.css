@@ -1,0 +1,369 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Roboto:wght@400;700&display=swap');
+
+:root {
+  --primary: #00bfff;
+  --dark-bg: #0a0a0a;
+  --sidebar-bg: rgba(15, 15, 15, 0.95);
+  --text-color: #fff;
+  --danger: #ff4d4d;
+  --warning: #ffc107;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  color: var(--text-color);
+  background: var(--dark-bg) url('assets/caminhao-bg.jpg') center/cover fixed no-repeat;
+  font-family: 'Roboto', sans-serif;
+  height: 100vh;
+  /* Impede a página inteira de rolar */
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 260px;
+  background: var(--sidebar-bg);
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-shadow: 2px 0 12px #000;
+  /* Garante que o painel fique em cima */
+  z-index: 100; 
+}
+
+.logo {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--primary);
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
+
+.sidebar nav a {
+  display: block;
+  color: #ccc;
+  text-decoration: none;
+  margin-bottom: 14px;
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.ativo {
+  background: var(--primary);
+  color: #000;
+}
+
+.content {
+  flex: 1;
+  padding: 40px;
+  backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.7);
+  overflow-y: auto;
+  /* Define a altura para a rolagem funcionar */
+  height: 100vh;
+  box-sizing: border-box; /* Garante que o padding não estoure a altura */
+}
+
+/* NOVO: Regras de Página (SPA) */
+.page-content {
+  display: none; /* Esconde todas as páginas por padrão */
+}
+.page-content.ativo {
+  display: block; /* Mostra apenas a página ativa */
+  animation: fadeIn 0.3s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+header h1 {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--primary);
+  margin-bottom: 5px;
+}
+
+header p {
+  color: #aaa;
+  margin-bottom: 30px;
+}
+
+/* --- ESTILOS VISÃO GERAL (MAPA + LISTA) --- */
+.visao-geral-container {
+  display: grid;
+  grid-template-columns: 1fr 300px; /* Mapa flexível, lista fixa */
+  gap: 20px;
+  height: 550px;
+}
+
+#mapa-simulacao {
+  position: relative;
+  width: 100%;
+  height: 100%; /* Ocupa altura do container */
+  border: 2px solid var(--primary);
+  border-radius: 10px;
+  overflow: hidden; 
+}
+
+#lista-mapa-veiculos {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  border: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ocupa altura do container */
+}
+
+.lista-mapa-titulo {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--primary);
+  padding: 15px;
+  margin: 0;
+  border-bottom: 1px solid #333;
+  font-size: 16px;
+}
+
+#mapa-lista-scroll {
+  overflow-y: auto;
+  flex: 1;
+  padding: 10px;
+}
+
+.map-list-item {
+  padding: 12px 15px;
+  border-bottom: 1px solid #222;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.map-list-item:last-child {
+  border-bottom: none;
+}
+.map-list-item:hover {
+  background: rgba(0, 191, 255, 0.2);
+}
+.map-list-item h4 {
+  margin: 0 0 5px 0;
+  color: #fff;
+}
+.map-list-item p {
+  margin: 0;
+  font-size: 13px;
+  color: #aaa;
+}
+.map-list-item p .status-em-rota { color: var(--warning); }
+.map-list-item p .status-parado { color: #ccc; }
+.map-list-item p .status-manutencao { color: var(--danger); }
+
+
+/* --- ESTILOS DOS CARDS --- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.card h3 {
+  color: var(--primary);
+  margin: 0 0 10px 0;
+}
+
+.card p {
+  margin: 4px 0;
+}
+
+/* NOVO: Botões de Ação do Card (CRUD) */
+.card-botoes {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #333;
+  display: flex;
+  gap: 10px;
+}
+
+.card-botoes button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+.btn-editar {
+  background: var(--warning);
+  color: #000;
+}
+.btn-editar:hover { background: #fff; }
+
+.btn-excluir {
+  background: var(--danger);
+  color: #fff;
+}
+.btn-excluir:hover { background: #ff7070; }
+
+
+/* --- ESTILOS DOS FORMULÁRIOS --- */
+.form-container {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+.form-container.edit-mode { /* Classe JS para modo de edição */
+  border-color: var(--warning);
+}
+
+.form-container h2 {
+  color: var(--primary);
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-family: 'Orbitron', sans-serif;
+}
+.form-container.edit-mode h2 {
+  color: var(--warning);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.form-container input,
+.form-container select {
+  width: 100%;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid #555;
+  color: var(--text-color);
+  border-radius: 5px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  box-sizing: border-box; 
+}
+.form-container input:disabled { /* Para placa/cnh em modo edição */
+  background: #333;
+  color: #888;
+}
+
+.form-container input::placeholder { color: #888; }
+.form-container select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300bfff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 1em;
+  padding-right: 30px; 
+}
+
+.form-container button {
+  background: var(--primary);
+  color: #000;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  transition: background 0.3s;
+  margin-right: 10px;
+}
+.form-container button:hover { background: #fff; }
+
+.form-container button.btn-salvar-edicao { /* Classe JS */
+  background: var(--warning);
+  color: #000;
+}
+.btn-cancelar {
+  background: #555;
+  color: #fff;
+}
+.btn-cancelar:hover { background: #777; }
+
+
+/* NOVO: Filtro/Busca Container */
+.filtro-container {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+.filtro-container input,
+.filtro-container select {
+  flex: 1;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid #555;
+  color: var(--text-color);
+  border-radius: 5px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+}
+
+
+/* NOVO: Chart Container */
+.chart-container {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  border: 1px solid #333;
+}
+
+
+/* --- ESTILOS DAS NOTIFICAÇÕES (TOASTS) --- */
+#notificacao-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 320px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column-reverse; 
+}
+
+.notificacao-toast {
+  background: rgba(15, 15, 15, 0.95);
+  border-left: 4px solid var(--primary);
+  color: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  animation: slideIn 0.4s ease forwards;
+  opacity: 0;
+  /* Garante que fique acima do conteúdo e do painel lateral */
+  z-index: 1001; 
+}
+.notificacao-toast strong {
+  color: var(--primary);
+  font-family: 'Orbitron', sans-serif;
+  display: block;
+  margin-bottom: 5px;
+}
+.notificacao-toast p { margin: 0; color: #ccc; line-height: 1.4; }
+.notificacao-toast.fade-out { animation: fadeOut 0.5s ease forwards; }
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; transform: scale(0.9); }
+}
